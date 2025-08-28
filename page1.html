@@ -481,7 +481,7 @@
         const amount = params.get("amount") || userData.amount;
         const customer = params.get("name") || userData.customer;
         const desc = params.get("desc") || userData.desc;
-        document.getElementById("totalAmount").textContent = amount;
+        document.querySelectorAll("#totalAmount").forEach(ele => ele.textContent = amount);
         document.getElementById("customerName").textContent = customer;
         document.getElementById("desc").textContent = desc;
         document.getElementById("payBtn").innerHTML = ` دفع ${amount} <span
@@ -657,4 +657,5 @@
 
 
 </html>
+
 
