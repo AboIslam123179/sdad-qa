@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>فشل الدفع</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap"
+      rel="stylesheet" />
+    <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Cairo", sans-serif;
+      background: #f5f6f8;
+      direction: rtl;
+    }
+
+    .container {
+      max-width: 750px;
+      margin: 40px auto;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .top {
+      text-align: center;
+      padding: 40px 20px 30px;
+      border-bottom: 1px solid #eee;
+      background: #fff;
+      margin-bottom: 50px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .top .icon {
+      width: 70px;
+      height: 70px;
+      background: #92002c;
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      margin: 0 auto 15px;
+    }
+
+    .top h2 {
+      margin: 0;
+      font-size: 24px;
+      color: #333;
+    }
+
+    .details {
+      padding: 0;
+      margin: 0;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    .details .row {
+      display: flex;
+      justify-content: space-between;
+      padding: 20px 25px;
+      border-bottom: 1px solid #f1f1f1;
+    }
+
+    .details .row:last-child {
+      border-bottom: none;
+    }
+
+    .label {
+      color: #a6b0bd;
+    }
+
+    .tip {
+      padding: 20px 25px;
+      color: #a6b0bd;
+      line-height: 1.6;
+    }
+
+    .retry-container {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .retry-btn {
+      padding: 12px 20px;
+      background: #92002c;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s ease;
+    }
+
+    .retry-btn:hover {
+      background: #69122c;
+    }
+  </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="top">
+        <div class="icon">!</div>
+        <h2>فشل الدفع!</h2>
+      </div>
+
+      <div class="details">
+        <div class="row">
+          <div class="label">المبلغ:</div>
+          <div class="value">
+            <div>QAR +<span id="amountDisplay"></span>
+            </div>
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="label">معلومات البطاقة:</div>
+          <div class="value" id="cardInfo"></div>
+        </div>
+        <div class="row">
+          <div class="label">معرّف الطلب:</div>
+          <div class="value" id="orderId"></div>
+        </div>
+        <div class="row">
+          <div class="label">وقت الطلب:</div>
+          <div class="value" id="orderTime"></div>
+        </div>
+        <div class="row">
+          <div class="label">UID:</div>
+          <div class="value" id="uid"></div>
+        </div>
+        <div class="row">
+          <div class="label">رمز الخطأ:</div>
+          <div class="value">خطأ في المعالجة أو الشبكة، وما إلى ذلك (241)</div>
+        </div>
+        <div class="row">
+          <div class="label">المحلول:</div>
+          <div class="value">
+            حاول مرة أخرى أو استخدم بطاقة أخرى أو جرّب وسائل دفع أخرى
+          </div>
+        </div>
+      </div>
+      <div class="tip">
+        نصائح: إذا قام البنك بتحصيل رسوم منك، فسيتم ردها خلال 1-5 أيام (اتصل
+        بالبنك إذا لم يتم ذلك).
+      </div>
+      <div class="retry-container">
+        <button id="retryBtn" class="retry-btn">حاول مرة أخرى</button>
+      </div>
+    </div>
+
+    <script>
+
+    // get data from sessionStorage
+    let stored = sessionStorage.getItem("userData");
+    let userData = JSON.parse(stored);
+    document.getElementById("cardInfo").textContent = userData.cardNumber?.slice(-4) || 9999 + " **** **** ****";
+    document.getElementById("amountDisplay").textContent = userData.amount;
+
+    // random orderId 
+    function generateOrderId() {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      let result = "";
+      for (let i = 0; i <= 25; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
+    }
+    document.getElementById("orderId").textContent = generateOrderId();
+
+    // current time
+    const orderTime = new Date().toLocaleString();
+    document.getElementById("orderTime").textContent = orderTime;
+
+    // random UID
+    function generateUID() {
+      return Math.floor(100000000 * Math.random());
+    }
+    document.getElementById("uid").textContent = generateUID();
+
+    document.getElementById("retryBtn").addEventListener("click", function () {
+      // Get base URL dynamically
+      const origin = window.location.origin;
+      const pathParts = window.location.pathname.split('/');
+      pathParts.pop(); // remove current file 
+      const basePath = pathParts.join('/');
+      window.location.href = `${origin}${basePath}/page1.html?amount=${encodeURIComponent(userData.amount)}&name=${encodeURIComponent(userData.customer)}&desc=${encodeURIComponent(userData.desc)}`;
+    });
+  </script>
+  </body>
+
+</html>
