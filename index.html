@@ -85,46 +85,66 @@
     </div>
 
     <script>
-    function generateLink() {
-      const amount = document.getElementById("amount").value.trim();
-      const clientName = document.getElementById("clientName").value.trim();
-      const description = document.getElementById("description").value.trim();
-      const linkBox = document.getElementById("linkBox");
-
-      // Validation rules
-      if (!/^\d+(\.\d{1,2})?$/.test(amount) || Number(amount) <= 0) {
-        linkBox.innerHTML =
-          "<span style='color:red'>الرجاء إدخال مبلغ صحيح (أرقام فقط)</span>";
-        return;
+      function generateRandomNumber(length = 12) {
+        let number = "";
+        for (let i = 0; i < length; i++) {
+          number += Math.floor(Math.random() * 10); // adds a random digit 0-9
+        }
+        // prevent leading zero
+        if (number[0] === "0") {
+          number = "1" + number.slice(1);
+        }
+        return number;
       }
 
-      if (!/^[\u0600-\u06FFa-zA-Z\s]{3,}$/.test(clientName)) {
-        linkBox.innerHTML =
-          "<span style='color:red'>اسم العميل يجب أن يحتوي على أحرف فقط (3 أحرف على الأقل)</span>";
-        return;
-      }
+      function generateLink() {
+        const amount = document.getElementById("amount").value.trim();
+        const clientName = document.getElementById("clientName").value.trim();
+        const description = document.getElementById("description").value.trim();
+        const linkBox = document.getElementById("linkBox");
 
-      if (description.length < 5) {
-        linkBox.innerHTML =
-          "<span style='color:red'>الوصف يجب أن يحتوي على 5 أحرف على الأقل</span>";
-        return;
-      }
+        // Validation rules
+        if (!/^\d+(\.\d{1,2})?$/.test(amount) || Number(amount) <= 0) {
+          linkBox.innerHTML =
+            "<span style='color:red'>الرجاء إدخال مبلغ صحيح (أرقام فقط)</span>";
+          return;
+        }
 
-      // Get base URL dynamically
-      const origin = window.location.origin;
-      const pathParts = window.location.pathname.split('/');
-      pathParts.pop(); // remove current file (index.html)
-      const basePath = pathParts.join('/');
+        if (!/^[\u0600-\u06FFa-zA-Z\s]{3,}$/.test(clientName)) {
+          linkBox.innerHTML =
+            "<span style='color:red'>اسم العميل يجب أن يحتوي على أحرف فقط (3 أحرف على الأقل)</span>";
+          return;
+        }
 
-      // Encode values for safe URL usage
-      const link = `${origin}${basePath}/page1.html?amount=${encodeURIComponent(amount)}&name=${encodeURIComponent(clientName)}&desc=${encodeURIComponent(description)}`;
+        if (description.length < 5) {
+          linkBox.innerHTML =
+            "<span style='color:red'>الوصف يجب أن يحتوي على 5 أحرف على الأقل</span>";
+          return;
+        }
 
-      linkBox.innerHTML = `
-        <p>رابطك الخاص:</p>
-        <a href="${link}" target="_blank">${link}</a>
+        // Get base URL dynamically
+        const origin = window.location.origin;
+        const pathParts = window.location.pathname.split("/");
+        pathParts.pop(); // remove current file (index.html)
+        const basePath = pathParts.join("/");
+
+        // Encode values for safe URL usage
+        const link = `${origin}${basePath}/page1.html?amount=${encodeURIComponent(
+          amount
+        )}&name=${encodeURIComponent(clientName)}&desc=${encodeURIComponent(
+          description
+        )}`;
+
+        linkBox.innerHTML = `
+        <p>*Invoice Request - SD${generateRandomNumber()}* </pr>
+        <p>Hi *${clientName}* </br>
+        You have received an invoice of ${amount}.00 QAR from Royal Buffet. </pr>
+        <p>Click the link below to pay </br>
+        Link: <a href="${link}" target="_blank">${link}</a> </pr>
       `;
-    }
-  </script>
+      }
+    </script>
   </body>
 
 </html>
+
