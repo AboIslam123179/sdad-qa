@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,79 +10,82 @@
       href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap"
       rel="stylesheet" />
     <style>
-    * {
-      box-sizing: border-box;
-    }
+      * {
+        box-sizing: border-box;
+      }
 
-    body {
-      font-family: "Cairo", sans-serif;
-      background: #f5f6f8;
-      display: flex;
-      justify-content: center;
-      padding: 40px;
-      height: 100vh;
-      margin: 0;
-    }
+      body {
+        font-family: "Cairo", sans-serif;
+        background: #f5f6f8;
+        display: flex;
+        justify-content: center;
+        padding: 40px;
+        height: 100vh;
+        margin: 0;
+      }
 
-    .card {
-      background: #fff;
-      padding: 20px;
-      width: 350px;
-      height: fit-content;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      text-align: center;
-    }
+      .card {
+        background: #fff;
+        padding: 20px;
+        width: 350px;
+        height: fit-content;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
 
-    h2 {
-      margin-bottom: 15px;
-      color: #333;
-    }
+      h2 {
+        margin-bottom: 15px;
+        color: #333;
+      }
 
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 16px;
-    }
+      input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 16px;
+      }
 
-    button {
-      width: 100%;
-      padding: 12px;
-      background: #92002c;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      cursor: pointer;
-    }
+      button {
+        width: 100%;
+        padding: 12px;
+        background: #92002c;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+      }
 
-    button:hover {
-      opacity: 0.9;
-    }
+      button:hover {
+        opacity: 0.9;
+      }
 
-    .link-box {
-      direction: ltr; 
-      margin-top: 15px;
-      font-size: 14px;
-      word-break: break-all;
-      text-align: left;
-    }
-  </style>
+      .link-box {
+        direction: ltr;
+        margin-top: 15px;
+        font-size: 14px;
+        word-break: break-all;
+        text-align: left;
+      }
+
+      #copyBtn {
+        display: none;
+      }
+    </style>
   </head>
 
   <body>
     <div class="card">
       <h2>توليد رابط دفع</h2>
-      <input type="number" id="amount" placeholder="ادخل المبلغ"
-        required />
-      <input type="text" id="clientName" placeholder="اسم العميل"
-        required />
+      <input type="number" id="amount" placeholder="ادخل المبلغ" required />
+      <input type="text" id="clientName" placeholder="اسم العميل" required />
       <input type="text" id="description" placeholder="الوصف" required />
       <button onclick="generateLink()">توليد الرابط</button>
       <div class="link-box" id="linkBox"></div>
+      <button id="copyBtn">Copy</button>
     </div>
 
     <script>
@@ -144,10 +146,26 @@
         <p>Click the link below to pay </br>
         Link: <a href="${link}" target="_blank">${link}</a> </pr>
       `;
+
+      document.getElementById("copyBtn").style.display = "block";
       }
+
+      document.getElementById("copyBtn").addEventListener("click", () => {
+        const text = document.getElementById("linkBox").innerText;
+
+        navigator.clipboard
+          .writeText(text)
+          .then(() => {
+            alert("تم النسخ بنجاح");
+          })
+          .catch((err) => {
+            console.error("خطأ في نسخ النص: ", err);
+          });
+      });
     </script>
   </body>
-
 </html>
+
+
 
 
